@@ -1,0 +1,153 @@
+
+hello.ko.unstripped:     file format elf64-x86-64
+
+
+Disassembly of section .init.text:
+
+0000000000000000 <init_module>:
+#define KMALLOC_FAIL_ON 5
+static int some_param = 0;
+module_param(some_param, int, 0644);
+MODULE_PARM_DESC(some_param, "An example integer parameter");
+
+static int __init hello_init(void) {
+   0:	e8 00 00 00 00       	callq  5 <init_module+0x5>
+    struct time_data *time_data;
+    int ret = 0;
+
+    if (some_param < 0) {
+   5:	83 3d 00 00 00 00 00 	cmpl   $0x0,0x0(%rip)        # c <init_module+0xc>
+   c:	79 02                	jns    10 <init_module+0x10>
+        BUG_ON(1);
+   e:	0f 0b                	ud2    
+static int __init hello_init(void) {
+  10:	55                   	push   %rbp
+    }
+
+    kmalloc_counter++;
+  11:	8b 05 00 00 00 00    	mov    0x0(%rip),%eax        # 17 <init_module+0x17>
+  17:	ff c0                	inc    %eax
+static int __init hello_init(void) {
+  19:	48 89 e5             	mov    %rsp,%rbp
+    kmalloc_counter++;
+  1c:	89 05 00 00 00 00    	mov    %eax,0x0(%rip)        # 22 <init_module+0x22>
+static int __init hello_init(void) {
+  22:	53                   	push   %rbx
+    if (kmalloc_counter == KMALLOC_FAIL_ON) {
+  23:	83 f8 05             	cmp    $0x5,%eax
+  26:	74 1e                	je     46 <init_module+0x46>
+		index = kmalloc_index(size);
+
+		if (!index)
+			return ZERO_SIZE_PTR;
+
+		return kmem_cache_alloc_trace(
+  28:	48 8b 3d 00 00 00 00 	mov    0x0(%rip),%rdi        # 2f <init_module+0x2f>
+  2f:	ba 20 00 00 00       	mov    $0x20,%edx
+  34:	be c0 0c 00 00       	mov    $0xcc0,%esi
+  39:	e8 00 00 00 00       	callq  3e <init_module+0x3e>
+  3e:	48 89 c3             	mov    %rax,%rbx
+        time_data = NULL;
+    } else {
+        time_data = kmalloc(sizeof(*time_data), GFP_KERNEL);
+    }
+    BUG_ON(!time_data);
+  41:	48 85 c0             	test   %rax,%rax
+  44:	75 02                	jne    48 <init_module+0x48>
+  46:	0f 0b                	ud2    
+
+    ktime_get_real_ts64(&time_data->start_time);
+  48:	48 89 c7             	mov    %rax,%rdi
+  4b:	e8 00 00 00 00       	callq  50 <init_module+0x50>
+ * Insert a new entry before the specified head.
+ * This is useful for implementing queues.
+ */
+static inline void list_add_tail(struct list_head *new, struct list_head *head)
+{
+	__list_add(new, head->prev, head);
+  50:	48 8b 05 00 00 00 00 	mov    0x0(%rip),%rax        # 57 <init_module+0x57>
+    list_add_tail(&time_data->list, &time_list);
+  57:	48 8d 53 10          	lea    0x10(%rbx),%rdx
+	new->next = next;
+  5b:	48 c7 43 10 00 00 00 	movq   $0x0,0x10(%rbx)
+  62:	00 
+	next->prev = new;
+  63:	48 89 15 00 00 00 00 	mov    %rdx,0x0(%rip)        # 6a <init_module+0x6a>
+
+    printk(KERN_INFO "hello: Module loaded successfully\n");
+  6a:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+	new->prev = prev;
+  71:	48 89 43 18          	mov    %rax,0x18(%rbx)
+	WRITE_ONCE(prev->next, new);
+  75:	48 89 10             	mov    %rdx,(%rax)
+  78:	e8 00 00 00 00       	callq  7d <init_module+0x7d>
+    return ret;
+}
+  7d:	31 c0                	xor    %eax,%eax
+  7f:	5b                   	pop    %rbx
+  80:	5d                   	pop    %rbp
+  81:	e9 00 00 00 00       	jmpq   86 <__UNIQUE_ID_some_param124+0x28>
+
+Disassembly of section .exit.text:
+
+0000000000000000 <cleanup_module>:
+
+static void __exit hello_exit(void) {
+   0:	55                   	push   %rbp
+    struct time_data *entry, *tmp;
+
+    list_for_each_entry_safe(entry, tmp, &time_list, list) {
+   1:	48 8b 05 00 00 00 00 	mov    0x0(%rip),%rax        # 8 <cleanup_module+0x8>
+   8:	48 8d 78 f0          	lea    -0x10(%rax),%rdi
+static void __exit hello_exit(void) {
+   c:	48 89 e5             	mov    %rsp,%rbp
+   f:	41 55                	push   %r13
+ * in an undefined state.
+ */
+static inline void list_del(struct list_head *entry)
+{
+	__list_del_entry(entry);
+	entry->next = LIST_POISON1;
+  11:	49 bd 00 01 00 00 00 	movabs $0xdead000000000100,%r13
+  18:	00 ad de 
+  1b:	41 54                	push   %r12
+	entry->prev = LIST_POISON2;
+  1d:	49 bc 22 01 00 00 00 	movabs $0xdead000000000122,%r12
+  24:	00 ad de 
+  27:	53                   	push   %rbx
+    list_for_each_entry_safe(entry, tmp, &time_list, list) {
+  28:	48 8b 18             	mov    (%rax),%rbx
+  2b:	48 83 eb 10          	sub    $0x10,%rbx
+  2f:	48 8d 47 10          	lea    0x10(%rdi),%rax
+  33:	48 3d 00 00 00 00    	cmp    $0x0,%rax
+  39:	74 29                	je     64 <cleanup_module+0x64>
+	__list_del_entry(entry);
+  3b:	48 8b 47 18          	mov    0x18(%rdi),%rax
+  3f:	48 8b 57 10          	mov    0x10(%rdi),%rdx
+	next->prev = prev;
+  43:	48 89 42 08          	mov    %rax,0x8(%rdx)
+	WRITE_ONCE(prev->next, next);
+  47:	48 89 10             	mov    %rdx,(%rax)
+	entry->next = LIST_POISON1;
+  4a:	4c 89 6f 10          	mov    %r13,0x10(%rdi)
+	entry->prev = LIST_POISON2;
+  4e:	4c 89 67 18          	mov    %r12,0x18(%rdi)
+        list_del(&entry->list);
+        kfree(entry);
+  52:	e8 00 00 00 00       	callq  57 <cleanup_module+0x57>
+    list_for_each_entry_safe(entry, tmp, &time_list, list) {
+  57:	48 8b 43 10          	mov    0x10(%rbx),%rax
+  5b:	48 89 df             	mov    %rbx,%rdi
+  5e:	48 8d 58 f0          	lea    -0x10(%rax),%rbx
+  62:	eb cb                	jmp    2f <cleanup_module+0x2f>
+    }
+
+    printk(KERN_INFO "hello: Module unloaded successfully\n");
+  64:	48 c7 c7 00 00 00 00 	mov    $0x0,%rdi
+  6b:	e8 00 00 00 00       	callq  70 <cleanup_module+0x70>
+}
+  70:	5b                   	pop    %rbx
+  71:	41 5c                	pop    %r12
+  73:	41 5d                	pop    %r13
+  75:	5d                   	pop    %rbp
+  76:	e9 00 00 00 00       	jmpq   7b <__UNIQUE_ID_some_param124+0x1d>
